@@ -14,12 +14,12 @@ app = Flask(__name__)
 CORS(app)
 
 lis = []
-TOKEN = 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgwNDcyOCwiaWF0IjoxNjM4NjUyOTQ2LCJleHAiOjE2Mzk1MTY5NDZ9.xfKXT204rbtnk9J3VlkdlPN2SwCACvR8QzJAawTcEQs'
+TOKEN = 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgwNDcyOCwiaWF0IjoxNjM5NTM2MjMxLCJleHAiOjE2NDA0MDAyMzF9.nyRegf9KlLOc38fN5-FmXqznSdLcJzpq6XA65-JU3oo'
 
 deq = deque()
 
 bet = 0.25
-dict1 = {'0.25': 219, '0.5': 632, '0.84': 363, '2.0': 5570, '1.0': 11795}
+dict1 = {'0.25': 219, '0.5': 3978, '0.84': 363, '2.0': 5570, '1.0': 11795}
 
 
 def make_bet(items_id, auto='1.01'):
@@ -58,7 +58,7 @@ def make_bet(items_id, auto='1.01'):
 
 def taktic4(lis: list):
     lis = [i[0] for i in lis]
-    if 2.0 > lis[-1] > 1.2 and lis[-2] < 1.2 and lis[-3] < 1.2 and lis[-4] < 1.2:
+    if lis[-1] > 1.2 and lis[-2] < 1.2 and lis[-3] < 1.2 and lis[-4] < 1.2:
         return True
 
 
@@ -108,8 +108,7 @@ class Inventory:
         self.lis.extend(lis)
         for i in self.lis:
            x+=i.get_price()
-        if x<1.0:
-            sys.exit()
+        
 
     def get_smallest(self, k=1):
         if self.lis:
@@ -247,7 +246,7 @@ def append():
             func3()
         elif dchance > 0.1:
             func2()
-        elif dchance > 0.04:
+        elif dchance > 0.05:
             func2()
     except sqlite3.IntegrityError as error:
         pass
@@ -279,4 +278,4 @@ def download_last(debug=True, i=2308923):
 if __name__ == "__main__":
     # download_last()
     exchange(True)
-    app.run()
+    app.run('0.0.0.0',port=5000)
