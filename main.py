@@ -18,8 +18,8 @@ TOKEN = 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgwNDcyOCwiaWF0IjoxNj
 
 deq = deque()
 
-bet = 0.25
-dict1 = {'0.25': 219, '0.5': 3978, '0.84': 363, '2.0': 5570, '1.0': 11795}
+bet = 10.0
+dict1 = {'0.25': 219, '0.5': 3978, '0.84': 363, '2.0': 5371, '1.0': 11795,'3.0':11797,'4.0':771,'5.0':3486,'10.0':11671}
 
 
 def make_bet(items_id, auto='1.01'):
@@ -62,6 +62,12 @@ def taktic4(lis: list):
         return True
 
 
+def taktic5(lis: list):
+    lis = [i[0] for i in lis]
+    if lis[-1] < 1.2 and lis[-2] < 1.2 and lis[-3] < 1.2 and lis[-4] < 1.2:
+        return True
+
+
 class Weapon:
     def __init__(self, dict1):
         self.price = dict1['price']
@@ -97,7 +103,7 @@ class Inventory:
                                          'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 YaBrowser/21.9.0.1044 Yowser/2.5 Safari/537.36'},
                                 json={'userItemIds': [],
                                       'wishItemIds': [dict1[str(bet)]]})
-            print(res)
+
 
     def __init__(self):
         global lis
@@ -108,7 +114,10 @@ class Inventory:
         self.lis.extend(lis)
         for i in self.lis:
            x+=i.get_price()
-        
+        if x<40:
+            self.lis.clear()
+            
+
 
     def get_smallest(self, k=1):
         if self.lis:
@@ -236,7 +245,9 @@ def append():
         con.commit()
         x = con.execute('select crash from crashes').fetchall()[-7:]
         dchance = main() - (1 / 1.2)
-        if all(i[0] < 1.2 for i in x[-3:]):
+        if taktic5(x):
+            func2()
+        elif all(i[0] < 1.2 for i in x[-3:]):
             print('make bet')
             func2(bet='3.2')
         elif all(i[0] < 1.2 for i in x[-2:]):
