@@ -18,18 +18,16 @@ async def start_msg(message: types.Message):
 /update_bet''')
 
 
-@dp.message_handler(commands=['/get_balance'])
+@dp.message_handler(commands=['get_balance'])
 async def get_balance(message: types.Message):
     response = requests.get('http://127.0.0.1:5000/get_balance')
     await message.answer(response.text)
 
 
-
-@dp.message_handler(commands=['/get_balance'])
+@dp.message_handler(commands=['update_bet'])
 async def update_bet(message: types.Message):
-    response = requests.get('http://127.0.0.1:5000/update_bet',json={'bet':message.text.split()[1],'id':message.text.split()[2]})
-
-
+    response = requests.get('http://172.0.0.1:5000/update_bet',
+                            json={'bet': message.text.split()[1], 'id': message.text.split()[2]})
 
 
 if __name__ == '__main__':

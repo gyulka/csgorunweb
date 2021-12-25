@@ -14,7 +14,7 @@ app = Flask(__name__)
 CORS(app)
 
 lis = []
-TOKEN = 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgwNDcyOCwiaWF0IjoxNjM5NTM2MjMxLCJleHAiOjE2NDA0MDAyMzF9.nyRegf9KlLOc38fN5-FmXqznSdLcJzpq6XA65-JU3oo'
+TOKEN = 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgwNDcyOCwiaWF0IjoxNjQwNDAyNDUxLCJleHAiOjE2NDEyNjY0NTF9.7qhmil3o2JUTfyxajUqkBrmZsA6ZvQpz3mLEZPrPkcI'
 
 deq = deque()
 
@@ -114,7 +114,12 @@ class Inventory:
         self.lis.extend(lis)
         for i in self.lis:
             x += i.get_price()
-        self.price = x
+
+    def price(self):
+        x = 0.0
+        for i in self.lis:
+            x += i.get_price()
+        return x
 
     def get_smallest(self, k=1):
         if self.lis:
@@ -285,14 +290,14 @@ def download_last(debug=True, i=2308923):
 
 @app.route('/get_balance')
 def get_balance():
-    return str(Inventory().price)
+    return str(Inventory().price())
 
 
 @app.route('/update_bet')
 def update_bet():
     global bet
     dict2 = json.loads(request.data.decode('utf-8'))
-    bet = dict2['bet']
+    bet = float(dict2['bet'])
     dict1[str(bet)] = dict2['id']
     exchange(True)
     return 'ok'
