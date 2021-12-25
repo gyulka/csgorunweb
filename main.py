@@ -19,7 +19,8 @@ TOKEN = 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgwNDcyOCwiaWF0IjoxNj
 deq = deque()
 
 bet = 10.0
-dict1 = {'0.25': 219, '0.5': 3978, '0.84': 363, '2.0': 5371, '1.0': 11795,'3.0':11797,'4.0':771,'5.0':3486,'10.0':11671}
+dict1 = {'0.25': 219, '0.5': 3978, '0.84': 363, '2.0': 5371, '1.0': 11795, '3.0': 11797, '4.0': 771, '5.0': 3486,
+         '10.0': 11671}
 
 
 def make_bet(items_id, auto='1.01'):
@@ -83,7 +84,7 @@ class Weapon:
 class Inventory:
     def set_balance(self, x):
         self.balance = x
-        for i in range(int(self.balance/bet)):
+        for i in range(int(self.balance / bet)):
             sleep(0.2)
             res = requests.post('https://api.csgorun.gg/marketplace/exchange-items',
                                 headers={'accept': 'application/json, text/plain, */*',
@@ -104,20 +105,16 @@ class Inventory:
                                 json={'userItemIds': [],
                                       'wishItemIds': [dict1[str(bet)]]})
 
-
     def __init__(self):
         global lis
         self.lis = lis
 
-    def update(self, lis,x):
+    def update(self, lis, x):
         self.lis.clear()
         self.lis.extend(lis)
         for i in self.lis:
-           x+=i.get_price()
-        if x<40:
-            self.lis.clear()
-            
-
+            x += i.get_price()
+        self.price = x
 
     def get_smallest(self, k=1):
         if self.lis:
@@ -223,8 +220,8 @@ def func3(bet='1.2'):
 def update_inv():
     dict2 = json.loads(request.data.decode('utf-8'))
     inv = Inventory()
-    lis=list(map(lambda x: Weapon(x), dict2['userItemIds']))
-    inv.update(lis,dict2['balance'])
+    lis = list(map(lambda x: Weapon(x), dict2['userItemIds']))
+    inv.update(lis, dict2['balance'])
     inv.set_balance(dict2['balance'])
     exchange(flag2=True)
     return '1'
@@ -286,7 +283,22 @@ def download_last(debug=True, i=2308923):
         print('закончил качать')
 
 
+@app.route('/get_balance')
+def get_balance():
+    return str(Inventory().price)
+
+
+@app.route('/update_bet')
+def update_bet():
+    global bet
+    dict2 = json.loads(request.data.decode('utf-8'))
+    bet = dict2['bet']
+    dict1[str(bet)] = dict2['id']
+    exchange(True)
+    return 'ok'
+
+
 if __name__ == "__main__":
     # download_last()
     exchange(True)
-    app.run('0.0.0.0',port=5000)
+    app.run('0.0.0.0', port=5000)
