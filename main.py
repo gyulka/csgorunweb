@@ -18,8 +18,8 @@ TOKEN = 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgwNDcyOCwiaWF0IjoxNj
 
 deq = deque()
 
-bet = 10.0
-dict1 = {'0.25': 219, '0.5': 3978, '0.84': 363, '2.0': 5371, '1.0': 11795, '3.0': 11797, '4.0': 771, '5.0': 3486,
+bet = 2.0
+dict1 = {'0.25': 219, '0.5': 3978, '0.84': 363, '2.0': 2164, '1.0': 11795, '3.0': 11797, '4.0': 771, '5.0': 3486,
          '10.0': 11671}
 
 
@@ -293,7 +293,7 @@ def get_balance():
     return str(Inventory().price())
 
 
-@app.route('/update_bet')
+@app.route('/update_bet1')
 def update_bet():
     global bet
     dict2 = json.loads(request.data.decode('utf-8'))
@@ -301,6 +301,21 @@ def update_bet():
     dict1[str(bet)] = dict2['id']
     exchange(True)
     return 'ok'
+
+
+
+@app.route('/update_bet2')
+def update_bet():
+    global bet
+    dict2 = json.loads(request.data.decode('utf-8'))
+    bet = float(dict2['bet'])
+    exchange(True)
+    return 'ok'
+
+
+@app.route('/get_bet')
+def get_bet():
+    return str(bet)
 
 
 if __name__ == "__main__":
