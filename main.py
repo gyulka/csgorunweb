@@ -18,8 +18,8 @@ TOKEN = 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgwNDcyOCwiaWF0IjoxNj
 
 deq = deque()
 
-bet = 2.0
-dict1 = {'0.25': 219, '0.5': 3978, '0.84': 363, '2.0': 2164, '1.0': 11795, '3.0': 11797, '4.0': 771, '5.0': 3486,
+bet = 1.0
+dict1 = {'0.25': 219, '0.5': 3978, '0.84': 363, '2.0': 2164, '1.0': 25000, '3.0': 11797, '4.0': 771, '5.0': 3486,
          '10.0': 11671}
 
 
@@ -257,10 +257,6 @@ def append():
             func2()
         elif taktic4(x):
             func3()
-        elif dchance > 0.1:
-            func2()
-        elif dchance > 0.05:
-            func2()
     except sqlite3.IntegrityError as error:
         pass
     return 'ok'
@@ -305,7 +301,7 @@ def update_bet():
 
 
 @app.route('/update_bet2')
-def update_bet():
+def update_bet3():
     global bet
     dict2 = json.loads(request.data.decode('utf-8'))
     bet = float(dict2['bet'])
