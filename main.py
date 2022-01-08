@@ -14,13 +14,13 @@ app = Flask(__name__)
 CORS(app)
 
 lis = []
-TOKEN = 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgwNDcyOCwiaWF0IjoxNjQwNDAyNDUxLCJleHAiOjE2NDEyNjY0NTF9.7qhmil3o2JUTfyxajUqkBrmZsA6ZvQpz3mLEZPrPkcI'
+TOKEN = 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgwNDcyOCwiaWF0IjoxNjQxMjgxNzY0LCJleHAiOjE2NDIxNDU3NjR9.wunrK9FpX0KktS8aM4n6SUOnplV3FYTuqbctqnqxZxQ'
 
 deq = deque()
 
-bet = 1.0
-dict1 = {'0.25': 219, '0.5': 3978, '0.84': 363, '2.0': 2164, '1.0': 25000, '3.0': 11797, '4.0': 771, '5.0': 3486,
-         '10.0': 11671}
+bet = 2.0
+dict1 = {'0.25': 219, '0.5': 628, '0.84': 363, '2.0': 3816, '1.0': 25000, '3.0': 4860, '4.0': 771, '5.0': 1359,
+         '10.0': 5520}
 
 
 def make_bet(items_id, auto='1.01'):
@@ -51,14 +51,13 @@ def make_bet(items_id, auto='1.01'):
                                           'sec-fetch-mode': 'cors',
                                           'sec-fetch-site': 'same-site',
                                           'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 YaBrowser/21.9.0.1044 Yowser/2.5 Safari/537.36'})
-        if i > 4:
+        if i > 7:
             return response
 
     response.close()
 
 
 def taktic4(lis: list):
-    lis = [i[0] for i in lis]
     if lis[-1] > 1.2 and lis[-2] < 1.2 and lis[-3] < 1.2 and lis[-4] < 1.2:
         return True
 
@@ -237,6 +236,18 @@ def init():
     exchange(True)
     return '1'
 
+def tactic1(lis: list):
+    return lis[-1] < 1.2 and lis[-2] < 1.2
+
+
+
+def tactic2(lis: list):
+    return lis[-1] < 1.2 and lis[-2] < 1.2 and lis[-3] >= 1.2 and lis[-4] < 1.2
+
+
+def tactic3(lis: list):
+    return lis[-1] < 2 and lis[-2] > 8 and lis[-3] >= 8 and lis[-4] < 2
+
 
 @app.route('/append', methods=['POST'])
 def append():
@@ -246,16 +257,25 @@ def append():
         con.execute('insert into crashes(id,crash) values(?,?)', (dict1['id'], dict1['crash']))
         con.commit()
         x = con.execute('select crash from crashes').fetchall()[-7:]
+        x = [i[0] for i in x]
+        if tactic1(x):
+            func2()
+        if tactic2(x):
+            func2()
+        # if tactic3(x):
+        #     func2('10')
         dchance = main() - (1 / 1.2)
-        if taktic5(x):
+        # if taktic5(x):
+        #     func2()
+        # elif all(i[0] < 1.2 for i in x[-3:]):
+        #     print('make bet')
+        #     func2(bet='3.2')
+        # elif all(i[0] < 1.2 for i in x[-2:]):
+        #     print('make bet')
+        #     func2()
+        if dchance > 0.07:
             func2()
-        elif all(i[0] < 1.2 for i in x[-3:]):
-            print('make bet')
-            func2(bet='3.2')
-        elif all(i[0] < 1.2 for i in x[-2:]):
-            print('make bet')
-            func2()
-        elif taktic4(x):
+        if taktic4(x):
             func3()
     except sqlite3.IntegrityError as error:
         pass
@@ -297,7 +317,6 @@ def update_bet():
     dict1[str(bet)] = dict2['id']
     exchange(True)
     return 'ok'
-
 
 
 @app.route('/update_bet2')
