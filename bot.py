@@ -26,13 +26,13 @@ async def get_balance(message: types.Message):
 
 @dp.message_handler(commands=['update_bet1'])
 async def update_bet(message: types.Message):
-    response = requests.get('http://127.0.0.1:5000/update_bet1',
+    response = requests.post('http://127.0.0.1:5000/update_bet1',
                             json={'bet': message.text.split()[1], 'id': message.text.split()[2]})
 
 
 @dp.message_handler(commands=['update_bet2'])
 async def update_bet(message: types.Message):
-    response = requests.get('http://127.0.0.1:5000/update_bet2',
+    response = requests.post('http://127.0.0.1:5000/update_bet2',
                             json={'bet': message.text.split()[1]})
 
 
