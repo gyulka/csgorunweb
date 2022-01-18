@@ -14,13 +14,21 @@ app = Flask(__name__)
 CORS(app)
 
 lis = []
-TOKEN = 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgwNDcyOCwiaWF0IjoxNjQxMjgxNzY0LCJleHAiOjE2NDIxNDU3NjR9.wunrK9FpX0KktS8aM4n6SUOnplV3FYTuqbctqnqxZxQ'
+TOKEN = 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgwNDcyOCwiaWF0IjoxNjQyMTQ2NjQwLCJleHAiOjE2NDMwMTA2NDB9.WbD5cbollQRtmigEWmKsM2W8rzkmu4fFw2lHSLpXugA'
 
 deq = deque()
 
-bet = 1.0
-dict1 = {'0.25': 219, '0.5': 1066, '0.84': 363, '2.0': 2164, '1.0': 25000, '3.0': 4860, '4.0': 771, '5.0': 1359,
-         '10.0': 5520}
+bet = 2.0
+dict1 = {'0.25': 219, '0.5': 791, '0.84': 363, '2.0': 17043, '1.0': 25000, '3.0': 4860, '4.0': 17513, '5.0': 3620,
+         '10.0': 99}
+
+
+
+
+def return_bet(k='1.01'):
+    res=requests.post('https://api.csgorun.gg/upgrade-bet',headers={'authorization':TOKEN},json={'coefficient': k})
+    print(res.text)
+    print(res)
 
 
 def make_bet(items_id, auto='1.01'):
@@ -55,17 +63,6 @@ def make_bet(items_id, auto='1.01'):
             return response
 
     response.close()
-
-
-def taktic4(lis: list):
-    if lis[-1] > 1.2 and lis[-2] < 1.2 and lis[-3] < 1.2 and lis[-4] < 1.2:
-        return True
-
-
-def taktic5(lis: list):
-    lis = [i[0] for i in lis]
-    if lis[-1] < 1.2 and lis[-2] < 1.2 and lis[-3] < 1.2 and lis[-4] < 1.2:
-        return True
 
 
 class Weapon:
@@ -168,7 +165,10 @@ def exchange(flag=False, flag2=False, x=bet):
                                      'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 YaBrowser/21.9.0.1044 Yowser/2.5 Safari/537.36'},
                             json={'userItemIds': [i.get_id() for i in Inventory().get_more(x)],
                                   'wishItemIds': [dict1[str(bet)]]})
-
+    try:
+        pass
+    except Exception:
+        pass
 
 @app.route('/')
 def index():
@@ -237,46 +237,51 @@ def init():
     return '1'
 
 def tactic1(lis: list):
-    return lis[-1] < 1.2 and lis[-2] < 1.2
-
+    return lis[-1] < 1.2 and lis[-2] < 1.2 and lis[-3] < 1.2 and lis[-4] >= 1.2
 
 
 def tactic2(lis: list):
     return lis[-1] < 1.2 and lis[-2] < 1.2 and lis[-3] >= 1.2 and lis[-4] < 1.2
 
-
 def tactic3(lis: list):
-    return lis[-1] < 2 and lis[-2] > 8 and lis[-3] >= 8 and lis[-4] < 2
+    return False
+    return lis[-1] < 2 and lis[-2] > 8 and lis[-3] >= 8 and lis[-4] < 8
 
 
+def tactic4(lis: list):
+    return lis[-1] < 1.2 and lis[-2] >= 2 and lis[-3] >= 2 and lis[-4] >= 2
+
+
+def taktic5(lis: list):
+    if lis[-1] > 1.2 and lis[-2] < 1.2 and lis[-3] < 1.2 and lis[-4] < 1.2:
+        return True
+
+def taktic6(lis: list):
+    if lis[-1] < 1.2 and lis[-2] < 1.2:
+        return True
+
+
+
+
+def taktic5(lis: list):
+    if lis[-1] > 1.2 and lis[-2] < 1.2 and lis[-3] < 1.2 and lis[-4] < 1.2:
+        return True
 @app.route('/append', methods=['POST'])
 def append():
     dict1 = json.loads(request.data.decode('utf-8'))
     con = sqlite3.connect('db1.db')
     try:
+        return_bet(str(float(dict1['crash'])-0.04))
         con.execute('insert into crashes(id,crash) values(?,?)', (dict1['id'], dict1['crash']))
         con.commit()
         x = con.execute('select crash from crashes').fetchall()[-7:]
         x = [i[0] for i in x]
-        if tactic1(x):
+        if taktic6(x) or tactic2(x) or tactic3(x) or taktic5(x):
             func2()
-        if tactic2(x):
-            func2()
-        # if tactic3(x):
-        #     func2('10')
-        dchance = main() - (1 / 1.2)
-        # if taktic5(x):
-        #     func2()
-        # elif all(i[0] < 1.2 for i in x[-3:]):
-        #     print('make bet')
-        #     func2(bet='3.2')
-        # elif all(i[0] < 1.2 for i in x[-2:]):
-        #     print('make bet')
-        #     func2()
-        if dchance > 0.07:
-            func2()
-        if taktic4(x):
-            func3()
+        elif taktic1(x):
+            func2(bet='3.2')
+
+        
     except sqlite3.IntegrityError as error:
         pass
     return 'ok'
