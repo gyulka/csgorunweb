@@ -276,10 +276,10 @@ def append():
         con.commit()
         x = con.execute('select crash from crashes').fetchall()[-7:]
         x = [i[0] for i in x]
-        if taktic6(x) or tactic2(x) or tactic3(x) or taktic5(x):
+        if taktic6(x):
             func2()
-        elif taktic1(x):
-            func2(bet='3.2')
+        elif taktic5(x) or tactic1(x) or tactic2(x):
+            func2()
 
         
     except sqlite3.IntegrityError as error:
