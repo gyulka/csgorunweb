@@ -19,7 +19,7 @@ TOKEN = 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgwNDcyOCwiaWF0IjoxNj
 deq = deque()
 
 bet = 2.0
-dict1 = {'0.25': 219, '0.5': 791, '0.84': 363, '2.0': 17043, '1.0': 25000, '3.0': 4860, '4.0': 17513, '5.0': 3620,
+dict1 = {'0.25': 219, '0.5': 1117, '0.84': 363, '2.0': 662, '1.0': 25000, '3.0': 4860, '4.0': 17513, '5.0': 244,
          '10.0': 99}
 
 
@@ -240,6 +240,10 @@ def tactic1(lis: list):
     return lis[-1] < 1.2 and lis[-2] < 1.2 and lis[-3] < 1.2 and lis[-4] >= 1.2
 
 
+def tactic7(lis: list):
+    return lis[-1] < 1.2 and lis[-2] >1.2
+
+
 def tactic2(lis: list):
     return lis[-1] < 1.2 and lis[-2] < 1.2 and lis[-3] >= 1.2 and lis[-4] < 1.2
 
@@ -276,10 +280,11 @@ def append():
         con.commit()
         x = con.execute('select crash from crashes').fetchall()[-7:]
         x = [i[0] for i in x]
-        if taktic6(x):
+        if tactic1(x):
+            func2(bet='1.2')
+        elif taktic6(x) or tactic2(x) or tactic3(x) or taktic5(x):
             func2()
-        elif taktic5(x) or tactic1(x) or tactic2(x):
-            func2()
+        
 
         
     except sqlite3.IntegrityError as error:
