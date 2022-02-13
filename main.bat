@@ -1,1 +1,1 @@
-python main_legacy.py
+python main.py

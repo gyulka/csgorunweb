@@ -1,3 +1,4 @@
+from random import random, shuffle
 import time
 from pprint import pprint
 from flask import Flask, request
@@ -5,7 +6,7 @@ import json
 import sqlite3
 from flask_cors import CORS
 import requests
-from config import TOKEN, def_bet, api_url
+from config import TOKEN, def_bet, api_url, goodasly_email
 
 
 def tactic1(lis: list):
@@ -108,6 +109,14 @@ class Inventory:
         self.lis.extend(lis)
         self.buy()
         self.exchange()
+        if 30 > self.get_sum() > 6 and bet() != 5.0:
+            request.post('http://127.0.0.1:5000/update_bet2', json={'bet': 5.0})
+        elif 100 > self.get_sum() > 30 and bet() != 10.0:
+            request.post('http://127.0.0.1:5000/update_bet2', json={'bet': 10.0})
+        elif self.get_sum() > 100 and bet() != 20.0:
+            request.post('http://127.0.0.1:5000/update_bet2', json={'bet': 20.0})
+        elif self.get_sum() > 140:
+            withdraw()
 
     def get_sum(self):
         x = self.balance
@@ -138,7 +147,7 @@ class Inventory:
             })
 
     def get_smallest(self, count=1):
-        self.lis.sort(key=lambda x: x.get_price())
+        shuffle(self.lis)
         return [i.get_id() for i in self.lis[-count:]]
 
     def make_bet(self, k=1.2, count=1):
@@ -156,6 +165,11 @@ class Inventory:
 
 
 inv = Inventory()
+
+
+def withdraw():
+    requests.post(api_url + 'withdraw', headers=headers,
+                  json={'email': goodasly_email, 'isGoodasly': True, 'userItemId': inv.get_smallest(1)[0]})
 
 
 @app.route('/get_token', methods=['GET'])
