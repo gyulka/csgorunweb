@@ -1,9 +1,8 @@
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-url_main='http://127.0.0.1:5000'
 http = new XMLHttpRequest();
-http.open('GET', url_main+'/get_token',false);
+http.open('GET', 'http://127.0.0.1:5000/get_token',false);
 http.send()
 console.log(http.responseText)
 
@@ -46,7 +45,7 @@ async function get_balance(){
 async function func(ids) {
     let x=0;
     http = new XMLHttpRequest();
-    http.open('POST', url_main+'/update_inv');
+    http.open('POST', 'http://127.0.0.1:5000/update_inv');
     http.send(JSON.stringify({ 'userItemIds': ids,'balance':await get_balance()}))
     return http.responseText
 }
@@ -67,7 +66,7 @@ catch(err){console.log(err)}
 }}
 async function make_bet(lis){
 http = new XMLHttpRequest();
-    http.open('POST', url_main+'/append');
+    http.open('POST', 'http://127.0.0.1:5000/append');
     http.send(JSON.stringify({ 'id': lis[1],'crash':lis[0]}))
 }
 
@@ -98,8 +97,5 @@ while (true) {
 }}
 inv = await get_inv()
 await func(inv)
-http = new XMLHttpRequest();
-http.open('POST', url_main+'/init',false);
-http.send()
 inv = await get_inv()
 await func(inv)
