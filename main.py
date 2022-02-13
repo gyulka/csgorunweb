@@ -16,12 +16,16 @@ def tactic2(lis: list):
     return lis[-1] < 1.2 and lis[-2] < 1.2 and lis[-3] >= 1.2 and lis[-4] < 1.2
 
 
+def tactic4(lis: list):
+    return lis[-1] >= 1.2 and lis[-2] < 1.2 and lis[-3] < 1.2 and lis[-4] >= 1.2 and lis[-5] < 1.2
+
+
 def tactic3(lis: list):
     if lis[-1] < 1.2 and lis[-2] < 1.2:
         return True
 
 
-tactics = [tactic1, tactic2, tactic3]
+tactics = [tactic1, tactic2, tactic3, tactic4]
 flags = {}
 for i in tactics:
     flags[i] = True

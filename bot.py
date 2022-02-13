@@ -5,17 +5,17 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, \
     KeyboardButton
+from config import tg_token
 
-Token = '5007549074:AAEjYzssYbTc1VhSbxPQqrY52H_MQxYskmI'
-
-bot = Bot(token=Token)
+bot = Bot(token=tg_token)
 dp = Dispatcher(bot)
 
 
 @dp.message_handler(commands=['start'])
 async def start_msg(message: types.Message):
     await message.answer(text='''/get_balance
-/update_bet''')
+/update_bet
+/edit_tactics''')
 
 
 @dp.message_handler(commands=['get_balance'])
@@ -27,14 +27,18 @@ async def get_balance(message: types.Message):
 @dp.message_handler(commands=['update_bet1'])
 async def update_bet(message: types.Message):
     response = requests.post('http://127.0.0.1:5000/update_bet1',
-                            json={'bet': message.text.split()[1], 'id': message.text.split()[2]})
+                             json={'bet': message.text.split()[1], 'id': message.text.split()[2]})
 
 
 @dp.message_handler(commands=['update_bet2'])
 async def update_bet(message: types.Message):
     response = requests.post('http://127.0.0.1:5000/update_bet2',
-                            json={'bet': message.text.split()[1]})
+                             json={'bet': message.text.split()[1]})
 
+
+@dp.message_handler(commands=['edit_tactics'])
+async def update_bet(message: types.Message):
+    response = requests.get('http://127.0.0.1:5000/get_flags', )
 
 
 if __name__ == '__main__':
