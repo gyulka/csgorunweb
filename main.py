@@ -8,6 +8,8 @@ from flask_cors import CORS
 import requests
 from config import TOKEN, def_bet, api_url, goodasly_email
 
+goodasly_email = [goodasly_email, goodasly_email]
+
 
 def tactic1(lis: list):
     return lis[-1] < 1.2 and lis[-2] < 1.2 and lis[-3] < 1.2 and lis[-4] >= 1.2
@@ -168,8 +170,11 @@ inv = Inventory()
 
 
 def withdraw():
+    if goodasly_email.__len__() == 2:
+        goodasly_email.append('roman.gyulizade@gmail.com')
     requests.post(api_url + 'withdraw', headers=headers,
-                  json={'email': goodasly_email, 'isGoodasly': True, 'userItemId': inv.get_smallest(1)[0]})
+                  json={'email': goodasly_email[0], 'isGoodasly': True, 'userItemId': inv.get_smallest(1)[0]})
+    goodasly_email.append(goodasly_email.pop(0))
 
 
 @app.route('/get_token', methods=['GET'])
