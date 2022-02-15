@@ -110,11 +110,11 @@ class Inventory:
         self.buy()
         self.exchange()
         if 30 > self.get_sum() > 6 and bet() != 5.0:
-            request.post('http://127.0.0.1:5000/update_bet2', json={'bet': 5.0})
+            requests.post('http://127.0.0.1:5000/update_bet2', json={'bet': 5.0})
         elif 100 > self.get_sum() > 30 and bet() != 10.0:
-            request.post('http://127.0.0.1:5000/update_bet2', json={'bet': 10.0})
-        elif self.get_sum() > 100 and bet() != 20.0:
-            request.post('http://127.0.0.1:5000/update_bet2', json={'bet': 20.0})
+            requests.post('http://127.0.0.1:5000/update_bet2', json={'bet': 10.0})
+        elif self.get_sum() > 80 and bet() != 20.0:
+            requests.post('http://127.0.0.1:5000/update_bet2', json={'bet': 20.0})
         elif self.get_sum() > 140:
             withdraw()
 
