@@ -97,8 +97,5 @@ while (true) {
 }}
 inv = await get_inv()
 await func(inv)
-http = new XMLHttpRequest();
-http.open('POST', 'http://127.0.0.1:5000/init',false);
-http.send()
 inv = await get_inv()
 await func(inv)
