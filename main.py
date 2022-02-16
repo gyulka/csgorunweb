@@ -249,7 +249,7 @@ def off_bot():
 
 
 @app.route('/on', methods=['POST'])
-def off_bot():
+def on_bot():
     for i in flags:
         flags[i] = True
 
