@@ -15,7 +15,9 @@ dp = Dispatcher(bot)
 async def start_msg(message: types.Message):
     await message.answer(text='''/get_balance
 /update_bet
-/edit_tactics''')
+/edit_tactics
+/on
+/off''')
 
 
 @dp.message_handler(commands=['get_balance'])
@@ -39,6 +41,16 @@ async def update_bet(message: types.Message):
 @dp.message_handler(commands=['edit_tactics'])
 async def update_bet(message: types.Message):
     response = requests.get('http://127.0.0.1:5000/get_flags', )
+
+
+@dp.message_handler(commands=['on'])
+async def update_bet(message: types.Message):
+    response = requests.post('http://127.0.0.1:5000/on', )
+
+
+@dp.message_handler(commands=['off'])
+async def update_bet(message: types.Message):
+    response = requests.post('http://127.0.0.1:5000/off', )
 
 
 if __name__ == '__main__':
