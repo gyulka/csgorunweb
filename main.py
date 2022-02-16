@@ -28,7 +28,7 @@ def tactic3(lis: list):
         return True
 
 
-tactics = [tactic1, tactic2, tactic3, tactic4]
+tactics = [tactic1, tactic2, tactic3]
 flags = {}
 for i in tactics:
     flags[i] = True
@@ -109,16 +109,21 @@ class Inventory:
         self.balance = bal
         self.clear()
         self.lis.extend(lis)
-        self.buy()
-        self.exchange()
+
         if 30 > self.get_sum() > 6 and bet() != 5.0:
+            time.sleep(1)
             requests.post('http://127.0.0.1:5000/update_bet2', json={'bet': 5.0})
         elif 100 > self.get_sum() > 30 and bet() != 10.0:
+            time.sleep(1)
             requests.post('http://127.0.0.1:5000/update_bet2', json={'bet': 10.0})
         elif self.get_sum() > 80 and bet() != 20.0:
+            time.sleep(1)
             requests.post('http://127.0.0.1:5000/update_bet2', json={'bet': 20.0})
         elif self.get_sum() > 140:
             withdraw()
+        else:
+            self.buy()
+            self.exchange()
 
     def get_sum(self):
         x = self.balance
@@ -135,10 +140,11 @@ class Inventory:
         return ans
 
     def exchange(self, flag=False):
-        requests.post(api_url + 'marketplace/exchange-items', headers=headers, json={
+        res = requests.post(api_url + 'marketplace/exchange-items', headers=headers, json={
             'userItemIds': self.get_more(flag),
             'wishItemIds': get_bet_itemId(bet())
         })
+        print(res.text)
 
     def buy(self):
 
@@ -216,7 +222,7 @@ def update_bet1():
     con = db_init()
     dict2 = json.loads(request.data.decode('utf-8'))
     bet.edit(float(dict2['bet']))
-    con.execute('update bets set id=? where bet=?', (dict2['id'], bet))
+    con.execute('update bets set id=? where bet=?', (dict2['id'], bet()))
     con.commit()
     inv.exchange(True)
     return 'ok'
@@ -234,6 +240,18 @@ def update_bet2():
 @app.route('/get_balance')
 def get_balance():
     return str(inv.get_sum())
+
+
+@app.route('/off', methods=['POST'])
+def off_bot():
+    for i in flags:
+        flags[i] = False
+
+
+@app.route('/on', methods=['POST'])
+def off_bot():
+    for i in flags:
+        flags[i] = True
 
 
 if __name__ == "__main__":
