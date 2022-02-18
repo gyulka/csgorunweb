@@ -110,13 +110,16 @@ class Inventory:
         self.clear()
         self.lis.extend(lis)
 
-        if 30 > self.get_sum() > 6 and bet() != 5.0:
+        if 3 > self.get_sum() >= 2.25 and bet() != 1.0:
+            time.sleep(1)
+            requests.post('http://127.0.0.1:5000/update_bet2', json={'bet': 1.0})
+        elif 40 > self.get_sum() >= 7.25 and bet() != 5.0:
             time.sleep(1)
             requests.post('http://127.0.0.1:5000/update_bet2', json={'bet': 5.0})
-        elif 100 > self.get_sum() > 30 and bet() != 10.0:
+        elif 80 > self.get_sum() >= 40 and bet() != 10.0:
             time.sleep(1)
             requests.post('http://127.0.0.1:5000/update_bet2', json={'bet': 10.0})
-        elif self.get_sum() > 80 and bet() != 20.0:
+        elif self.get_sum() >= 80 and bet() != 20.0:
             time.sleep(1)
             requests.post('http://127.0.0.1:5000/update_bet2', json={'bet': 20.0})
         elif self.get_sum() > 140:
@@ -239,13 +242,14 @@ def update_bet2():
 
 @app.route('/get_balance')
 def get_balance():
-    return str(inv.get_sum())
+    return str(round(inv.get_sum(),2))
 
 
 @app.route('/off', methods=['POST'])
 def off_bot():
     for i in flags:
         flags[i] = False
+    flags[tactic1] = True
 
 
 @app.route('/on', methods=['POST'])
