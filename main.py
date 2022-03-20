@@ -6,7 +6,7 @@ import json
 import sqlite3
 from flask_cors import CORS
 import requests
-from config import TOKEN, def_bet, api_url, goodasly_email
+from config import *
 
 goodasly_email = [goodasly_email, goodasly_email]
 
@@ -28,7 +28,35 @@ def tactic3(lis: list):
         return True
 
 
-tactics = [tactic1, tactic2, tactic3]
+def tactic5(lis: list):
+    lis = lis[:-1]
+    return lis[-1] < 1.2 and lis[-2] < 1.2 and lis[-3] < 1.2 and lis[-4] >= 1.2
+
+
+def tactic6(lis: list):
+    x = 0
+    for i in lis[-4:]:
+        if i < 1.2:
+            x += 1
+    return x >= 3
+
+
+tactic1.bet = 1.2
+tactic2.bet = 1.2
+tactic3.bet = 1.2
+tactic4.bet = 1.2
+tactic5.bet = 1.2
+tactic6.bet = 1.2
+
+tactic1.count = 1
+tactic2.count = 2
+tactic3.count = 1
+tactic4.count = 1
+tactic5.count = 2
+tactic6.count = 1
+
+tactics = [tactic1, tactic2, tactic3, tactic5, tactic5]
+tactics.sort(key=lambda x: -x.count)
 flags = {}
 for i in tactics:
     flags[i] = True
@@ -110,20 +138,24 @@ class Inventory:
         self.clear()
         self.lis.extend(lis)
 
-        if 30 > self.get_sum() > 6 and bet() != 5.0:
+        if bet5 > self.get_sum() >= bet1 and bet() != 1.0:
+            time.sleep(1)
+            requests.post('http://127.0.0.1:5000/update_bet2', json={'bet': 1.0})
+        elif bet10 > self.get_sum() >= bet5 and bet() != 5.0:
             time.sleep(1)
             requests.post('http://127.0.0.1:5000/update_bet2', json={'bet': 5.0})
-        elif 100 > self.get_sum() > 30 and bet() != 10.0:
+        elif bet20 > self.get_sum() >= bet10 and bet() != 10.0:
             time.sleep(1)
             requests.post('http://127.0.0.1:5000/update_bet2', json={'bet': 10.0})
-        elif self.get_sum() > 80 and bet() != 20.0:
+        elif self.get_sum() >= bet20 and bet() != 20.0:
             time.sleep(1)
             requests.post('http://127.0.0.1:5000/update_bet2', json={'bet': 20.0})
-        elif self.get_sum() > 140:
+        elif self.get_sum() > withd:
             withdraw()
         else:
             self.buy()
             self.exchange()
+            self.lis = [i for i in self.lis if i.get_price() <= bet()]
 
     def get_sum(self):
         x = self.balance
@@ -176,8 +208,6 @@ inv = Inventory()
 
 
 def withdraw():
-    if goodasly_email.__len__() == 2:
-        goodasly_email.append('roman.gyulizade@gmail.com')
     requests.post(api_url + 'withdraw', headers=headers,
                   json={'email': goodasly_email[0], 'isGoodasly': True, 'userItemId': inv.get_smallest(1)[0]})
     goodasly_email.append(goodasly_email.pop(0))
@@ -209,7 +239,7 @@ def append():
         x = [i[0] for i in x]
         for i in tactics:
             if i(x) and flags[i]:
-                inv.make_bet()
+                inv.make_bet(i.bet, i.count)
                 break
 
     except sqlite3.IntegrityError as error:
@@ -239,13 +269,14 @@ def update_bet2():
 
 @app.route('/get_balance')
 def get_balance():
-    return str(inv.get_sum())
+    return str(round(inv.get_sum(), 2))
 
 
 @app.route('/off', methods=['POST'])
 def off_bot():
     for i in flags:
         flags[i] = False
+    flags[tactic1] = True
 
 
 @app.route('/on', methods=['POST'])
