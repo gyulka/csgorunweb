@@ -1,9 +1,9 @@
-def_bet = 1.0
-TOKEN = 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAxMzg5MSwiaWF0IjoxNjQ3NzYxODUyLCJleHAiOjE2NDg2MjU4NTJ9.n2iLpl1cHBozD6qqMVwjd-mGDT-LTbIoiXEEwKour7c'
-tg_token = '5007549074:AAEjYzssYbTc1VhSbxPQqrY52H_MQxYskmI'
-goodasly_email='roman.gyulizade@gmail.com'
+def_bet = 0.25
+TOKEN = ''
+tg_token = ''
+goodasly_email=''
 # --------служебные--------
-api_url = 'https://api.csgorun.gg/'
+api_url = 'https://api.csgorun.run/'
 
 bet1=2.25
 bet5=7.25
