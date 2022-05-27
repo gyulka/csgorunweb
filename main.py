@@ -237,7 +237,7 @@ def append():
         con.commit()
         x = con.execute('select crash from crashes').fetchall()[-7:]
         x = [i[0] for i in x]
-        for i in tactics:
+        for i in tactics or True:
             if i(x) and flags[i]:
                 inv.make_bet(i.bet, i.count)
                 break
