@@ -13,8 +13,8 @@ x = {
     'authorization': http.responseText,
     'content-length': '22',
     'content-type': 'application/json;charset=UTF-8',
-    'origin': 'https://csgorun.gg',
-    'referer': 'https://csgorun.gg/',
+    'origin': 'https://csgo3.run',
+    'referer': 'https://csgo3.run/',
     'sec-ch-ua': '"Yandex";v="21", " Not;A Brand";v="99", "Chromium";v="93"',
     'sec-ch-ua-mobile': '?0',
     'sec-ch-ua-platform': '"Windows"',
@@ -26,7 +26,7 @@ x = {
 x['authorization']=http.responseText
 async function get_inv(i) {
     http = new XMLHttpRequest();
-    http.open('GET', 'https://api.csgorun.gg/current-state?montaznayaPena=null', false);
+    http.open('GET', 'https://api.csgo3.run/current-state?montaznayaPena=null', false);
     http.setRequestHeader('authorization', x['authorization']);
     http.send();
     let response = JSON.parse(http.responseText);
@@ -35,7 +35,7 @@ async function get_inv(i) {
 }
 async function get_balance(){
     http = new XMLHttpRequest();
-    http.open('GET', 'https://api.csgorun.gg/current-state?montaznayaPena=null', false);
+    http.open('GET', 'https://api.csgo3run/current-state?montaznayaPena=null', false);
     http.setRequestHeader('authorization', x['authorization']);
     http.send();
     let response = JSON.parse(http.responseText);
@@ -52,10 +52,10 @@ async function func(ids) {
 async function get_game(i) {
 while(true){try{
     http = new XMLHttpRequest();
-    http.open('GET', 'https://api.csgorun.gg/games/' + i);
+    http.open('GET', 'https://api.csgo3.run/games/' + i);
     http.send()
     while (http.status != 200) {
-        http.open('GET', 'https://api.csgorun.gg/games/' + i);
+        http.open('GET', 'https://api.csgo3.run/games/' + i);
         http.send()
         await sleep(1000)
     }
