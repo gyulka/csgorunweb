@@ -3,10 +3,10 @@ TOKEN = ''
 tg_token = ''
 goodasly_email=''
 # --------служебные--------
-api_url = 'https://api.csgorun.run/'
+api_url = 'https://api.csgo3.run/'
 
-bet1=2.25
-bet5=7.25
-bet10=30.0
+bet1=5.0
+bet5=25.0
+bet10=50.0
 bet20=80.0
 withd=130.0
