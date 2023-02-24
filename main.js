@@ -35,7 +35,7 @@ async function get_inv(i) {
 }
 async function get_balance(){
     http = new XMLHttpRequest();
-    http.open('GET', 'https://api.csgo3run/current-state?montaznayaPena=null', false);
+    http.open('GET', 'https://api.csgo3.run/current-state?montaznayaPena=null', false);
     http.setRequestHeader('authorization', x['authorization']);
     http.send();
     let response = JSON.parse(http.responseText);
